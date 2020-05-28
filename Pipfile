@@ -7,6 +7,12 @@ verify_ssl = true
 
 [packages]
 django = "*"
+django-crispy-forms = "*"
+crispy-forms-semantic-ui = "*"
+django-semanticui-forms = "*"
+django-mathfilters = "*"
+pandas = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_field %}
+{% block styles %}
+    <style>
+    body {
+        background-image: url("{% static "exams/images/bg.png" %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="height: 100px"></div>
+    <div class="ui placeholder segment">
+        <div class="ui two column very relaxed stackable grid">
+            <div class="column middle aligned">
+                <div class="ui form right_align font">
+                    <form method="post" class="form-group">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}">نام کاربری</label>
+                            {{ form.username }}
+                            {{ form.username.errors | as_crispy_errors }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.password.id_for_label }}">کلمه‌ی عبور</label>
+                            {{ form.password }}
+                            {{ form.password.errors | as_crispy_errors }}
+                        </div>
+                        <button class="ui green right labeled icon button">
+                            <i class="right arrow icon"></i>
+                            ورود به سامانه
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="middle aligned column font center aligned">
+                <div class="center">
+                    <img class="medium image" style="height: 300px" src="{% static "exams/images/logo.png" %}"
+                         alt="elm-adab logo">
+                </div>
+                <h5>
+                    دبیرستان پسرانه‌ی علم و ادب
+                </h5>
+                <h3>
+                    سامانه‌ی آزمون
+                </h3>
+            </div>
+        </div>
+        <div class="ui vertical divider"></div>
+    </div>
+
+
+{% endblock %}

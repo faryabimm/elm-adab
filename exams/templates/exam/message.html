@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load mathfilters %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static "/exams/css/style.css" %}"/>
+{% endblock %}
+{% block title %}
+    {{ exam.name }}
+{% endblock %}
+{% block content %}
+    <div class="ui secondary pointing menu">
+        <div class="right menu">
+            <a id="clock" class="ui item active">
+                دبیرستان پسرانه‌ی علم و ادب
+            </a>
+        </div>
+        <a class="ui item" href="/accounts/logout">
+            <div class="ui red button">خروج</div>
+        </a>
+    </div>
+
+    <table class="ui purple table font right aligned">
+        <thead>
+        <tr>
+            <th>نام</th>
+            <th>نام خانوادگی</th>
+            <th>شماره‌ی ملی</th>
+            <th>کلاس</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ user.student.first_name }}</td>
+            <td>{{ user.student.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.student.school_class.name }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="ui {{ color }} icon message right_align font">
+        <div class="content">
+            <div class="header">
+                {{ header }}
+            </div>
+            <p>
+                {{ message }}
+            </p>
+        </div>
+        <i class="{{ icon }} icon"></i>
+    </div>
+{% endblock %}

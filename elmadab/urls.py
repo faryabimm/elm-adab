@@ -15,8 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-]
+    path('azmoon/', include('exams.urls'), name='azmoon'),
+    path('', RedirectView.as_view(pattern_name='azmoon', permanent=False)),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+admin.site.site_header = "پنل مدیریت"
+admin.site.site_title = "دبیرستان علم و ادب - پنل مدیریت"
+admin.site.index_title = "به پنل مدیریت وبسایت دبیرستان غیردولتی علم و ادب  جیرفت خوش‌آمدید."

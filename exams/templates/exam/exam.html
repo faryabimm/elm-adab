@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load mathfilters %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static "/exams/css/style.css" %}"/>
+{% endblock %}
+{% block title %}
+    {{ exam.name }}
+{% endblock %}
+{% block content %}
+    <div class="ui secondary pointing menu">
+        <a class="item active">
+            دبیرستان پسرانه‌ی علم و ادب
+        </a>
+        <a class="item">
+            آزمون {{ exam.name }}
+        </a>
+        <a class="item">
+            مدت پاسخ: {{ exam.duration.seconds | intdiv:60 }} دقیقه
+        </a>
+        <div class="right menu">
+            <a id="clock" class="ui item">
+                زمان باقی‌مانده: ... دقیقه
+            </a>
+        </div>
+        <a class="ui item" href="/accounts/logout">
+            <div class="ui red button">خروج</div>
+        </a>
+    </div>
+
+    <table class="ui purple table font right aligned">
+        <thead>
+        <tr>
+            <th>نام</th>
+            <th>نام خانوادگی</th>
+            <th>شماره‌ی ملی</th>
+            <th>کلاس</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ user.student.first_name }}</td>
+            <td>{{ user.student.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.student.school_class.name }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="ui fluid two item menu">
+        <a id="exam_header" class="item active" onclick="toggle_view('submission', 'exam')">صورت آزمون</a>
+        <a id="submission_header" class="item" onclick="toggle_view('exam', 'submission')">ارسال پاسخ</a>
+    </div>
+    <div id="exam">
+        <div class="ui segment">
+            <embed class="exam_questions"
+                   src="/media/{{ exam.question_file_path.name }}"/>
+        </div>
+    </div>
+    <div id="submission" class="font" style="display: none;">
+
+        <div class="ui yellow icon message right_align">
+            <div class="content">
+                <div class="header">
+                    ابتدا فایل را انتخاب و سپس ارسال کنید.
+                </div>
+                <p>دقت کنید پس از تحویل پاسخ دیگر امکان تغییر در آن را نخواهید داشت.</p>
+            </div>
+            <i class="inbox icon"></i>
+        </div>
+
+        <div class="ui blue icon message right_align">
+            <div class="content">
+                <div class="header">
+                    فایل ارسالی شما باید در یکی از این فرمت‌ها باشد:
+                </div>
+                <p>
+                    {{ exam.valid_submission_extensions }}
+                </p>
+            </div>
+            <i class="file alternate icon"></i>
+        </div>
+
+
+        <form method="post" enctype="multipart/form-data">
+
+            <div class="ui segment">
+                <div class="ui two column very relaxed grid">
+                    <div class="column center aligned">
+                        <div dir="rtl">
+                            {% csrf_token %}
+                            {{ form.file }}
+                            {{ form.file.errors | as_crispy_errors }}
+                            {{ form.exam_id }}
+                        </div>
+                    </div>
+                    <div class="column center aligned">
+                        <div class="middle aligned column">
+                            <button class="ui blue right labeled icon button">
+                                <i class="upload icon"></i>
+                                ارسال پاسخ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui vertical divider">
+                    سپس
+                </div>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        function toggle_view(from, to) {
+            if (document.getElementById(`${from}_header`).classList.contains("active")) {
+                document.getElementById(`${from}_header`).className = "item";
+                document.getElementById(`${to}_header`).className = "item active";
+                document.getElementById(from).style.display = "none";
+                document.getElementById(to).style.display = "block";
+            }
+            console.log();
+        }
+
+        function clock() {
+            let server_timestamp = +"{{ server_timestamp }}";
+            let client_timestamp = new Date().getTime() / 1000;
+            let diff_time = client_timestamp - server_timestamp;
+            let end_time = +"{{ end_timestamp }}";
+
+            setInterval(() => {
+                let server_time = new Date().getTime() / 1000 - diff_time;
+                console.log(diff_time);
+                let remaining = end_time - server_time;
+                let minutes = Math.floor(remaining / 60);
+                document.getElementById('clock').innerText = `زمان باقی‌مانده: ${minutes} دقیقه`;
+            }, 1000);
+        }
+
+        clock();
+    </script>
+{% endblock %}
