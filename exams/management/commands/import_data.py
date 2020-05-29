@@ -46,7 +46,7 @@ class Command(BaseCommand):
             class_students = df[df['class_code'] == clazz['class_code']].copy()
             for student in class_students.iterrows():
                 student = student[1]
-                user = User(
+                user = User.objects.create_user(
                     username=student['national_code'],
                     password=student['national_code'],
                 )
